@@ -4,7 +4,7 @@ from fastapi import Request
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+# from fastapi.staticfiles import StaticFiles
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -15,7 +15,7 @@ import re
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = [
     "http://localhost:8080",
