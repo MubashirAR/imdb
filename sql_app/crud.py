@@ -1,6 +1,7 @@
 from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
+from sqlalchemy.sql.expression import false
 from . import models, schemas
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -70,7 +71,7 @@ def get_movie(db, id: int):
 
 def get_movies(db, page=1):
     print('get movies crud called', (page - 1) * limit, limit)
-    movies = db.query(models.Movie).offset((page - 1) * limit).limit(limit).all()
+    movies = db.query(models.Movie).filter(models.Movie.is_active.is_(True)).offset((page - 1) * limit).limit(limit).all()
     # genres not populating unless used? Couldn't find an alternative like "lean" in mongodb
     dict_movies = [movie.genres for movie in movies]
     print(dict_movies)
