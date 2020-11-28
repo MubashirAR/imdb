@@ -109,6 +109,14 @@ def create_user(
     return crud.create_user(db=db, user=user)
 
 
+# Used for data import
+# @app.post("/movie/bulk", status_code=status.HTTP_201_CREATED)
+# def create_movie_bulk(
+#         movies: List[schemas.MovieCreate], db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)
+# ):
+#     return crud.create_movie_bulk(db=db, movies=movies, current_user=current_user)
+
+
 @app.post("/movie/", status_code=status.HTTP_201_CREATED)
 def create_movie(
         movie: schemas.MovieCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)

@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from . import models, schemas
@@ -87,6 +88,21 @@ def get_movies_search(db, query, page=1):
         .all()
     dict_movies = [movie.genres for movie in movies]
     return movies
+
+
+def create_movie_bulk(db: Session, movies: List[schemas.MovieCreate], current_user: models.User):
+    if current_user.role != 'admin':
+        raise schemas.AuthorizationError('You are not authorized for this request')
+    for movie in movies:
+        genres = db_genre_list(db, movie)
+        db_movie = models.Movie(popularity=movie.popularity, director=movie.director, name=movie.name,
+                            imdb_score=movie.imdb_score)
+        db.add(db_movie)
+        append_genres_to_movie(db, genres, db_movie)
+        print(db_movie.genres)
+    db.commit()
+    db.refresh(db_movie)
+    return db_movie
 
 
 def create_movie(db: Session, movie: schemas.MovieCreate, current_user: models.User):
