@@ -3,17 +3,20 @@ from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from fastapi import Depends, FastAPI, HTTPException, status
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-from fastapi.middleware.cors import CORSMiddleware
 import re
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+app.mount("/", StaticFiles(directory="static"), name="static")
 
 origins = [
     "http://localhost:8080",
