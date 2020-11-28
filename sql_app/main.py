@@ -1,10 +1,11 @@
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Request
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -15,8 +16,15 @@ import re
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
-app.mount("/", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="package_docs")
+
+@app.get("/static")
+async def example(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
 
 origins = [
     "http://localhost:8080",
